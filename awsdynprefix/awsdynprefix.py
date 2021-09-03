@@ -1,4 +1,3 @@
-from botocore.vendored import requests
 import boto3, botocore, json
 import logging, traceback, os
 import socket, struct
@@ -96,7 +95,7 @@ def lambda_handler(event, context):
 		ec2         = session.client('ec2')
 		prefixlists = getPrefixConfig()
 		for prefixlist_key in prefixlists:
-			prefixlist_value = prefixlists[prefixlist_key]
+			prefixlist_value = list(prefixlists[prefixlist_key])
 			prefixlist_cidrs = getURL(prefixlist_value)
 			if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_key: ' + prefixlist_key)
 			if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_value: ' + prefixlist_value)
@@ -104,59 +103,3 @@ def lambda_handler(event, context):
 			prefixlist_exists(ec2, prefixlist_key)
 	except:
 		logger.info('AWS Dynamic Prefix Lambda - Error ' + traceback.format_exc())
-
-		new_routes = getAWSips(services, regions)
-		filters    = [{'Name': 'vpc-id', 'Values': AWSvpcids}]
-		routes     = ec2.describe_route_tables(Filters=filters)
-		logger.info('AWS Dynamic Prefix Lambda - Info [region, account, AWSvpcids, New Routes, Route Limit]: ' + str(region) + ' ' + str(account) + ' ' + str(AWSvpcids) + ' ' + str(new_routes) + ' ' + str(limit))
-		
-		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - Start Loop')
-		for i in range(0, len(routes['RouteTables'])):
-			routes_dict = routes['RouteTables'][i]['Routes']
-			if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - routes dictionary: ' + str(routes_dict))
-			route_table_id = routes['RouteTables'][i]['RouteTableId']
-			if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - route table ID: ' + str(route_table_id))
-			existing_cidrs = []
-			nat_gw_id = ''
-			for y in range(0, len(routes_dict)):
-				if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - routes_dict[' + str(y) + ']: ' + str(routes_dict[y]))
-				if 'DestinationPrefixListId' not in routes_dict[y]:
-					if routes_dict[y]['Origin'] == "CreateRoute":
-						if 'NatGatewayId' in routes_dict[y]:
-							nat_gw_id = routes_dict[y]['NatGatewayId']
-							if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - NAT Gateway ID: ' + str(nat_gw_id))
-							route = routes_dict[y]['DestinationCidrBlock']
-							existing_cidrs.append(route)
-							if route not in new_routes and route not in ignore:
-								if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - routes_dict[' + str(y) + '][DestinationCidrBlock]: ' + str(routes_dict[y]['DestinationCidrBlock']))
-								try:
-									ec2.delete_route(
-										DestinationCidrBlock=route,
-										DryRun=False,
-										RouteTableId=route_table_id
-									)
-									logger.info('AWS Dynamic Prefix Lambda - Info Deleted Route ' + str(route) + ' in rotuing table ' + str(route_table_id))
-								except:
-									logger.info('AWS Dynamic Prefix Lambda - Error Deleting Route ' + str(route) + ' in rotuing table ' + str(route_table_id))
-									logger.info('AWS Dynamic Prefix Lambda - Error Deleting Route Detail ' + traceback.format_exc())
-			
-			new_routes_final = compare(new_routes, existing_cidrs)
-			if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - Existing Routes: ' + str(existing_cidrs))
-			if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - New Routes to add: ' + str(new_routes_final))
-
-			if nat_gw_id != "":
-				for route in new_routes_final:
-					try:
-						ec2.create_route(
-							DestinationCidrBlock=route,
-							DryRun=False,
-							NatGatewayId=nat_gw_id,
-							RouteTableId=route_table_id,
-						)
-						logger.info('AWS Dynamic Prefix Lambda - Info Added Route ' + str(route) + ' in rotuing table ' + str(route_table_id))
-					except:
-						logger.info('AWS Dynamic Prefix Lambda - Error Adding Route ' + str(route) + ' in rotuing table ' + str(route_table_id))
-						logger.info('AWS Dynamic Prefix Lambda - Error Adding Route Detail ' + traceback.format_exc())
-			else:
-				if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - No NAT Gateway found for route table ' + str(route_table_id))
-		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - End Loop')
