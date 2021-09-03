@@ -1,5 +1,5 @@
 resource "aws_iam_role" "awsdynprefix" {
-  name = "${var.name}"
+  name = var.name
   assume_role_policy = <<EOF
 {
   "Version": "2012-10-17",
@@ -18,8 +18,8 @@ EOF
 }
 
 resource "aws_iam_role_policy" "awsdynprefix" {
-  name = "${var.name}"
-  role = "${aws_iam_role.awsdynprefix.name}"
+  name = var.name
+  role = aws_iam_role.awsdynprefix.name
 
   policy = <<EOF
 {
