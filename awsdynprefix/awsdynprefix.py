@@ -94,10 +94,11 @@ def lambda_handler(event, context):
 		session     = boto3.Session(region_name=region)
 		ec2         = session.client('ec2')
 		prefixlists = getPrefixConfig()
+		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlists: ' + prefixlists)
 		for prefixlist_key in prefixlists:
 			# prefixlist_value = list(prefixlists[prefixlist_key])
 			# prefixlist_cidrs = getURL(prefixlist_value)
-			if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_key: ' + prefixlist_key)
+			if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_key: ' + map(str,prefixlist_key))
 			if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_key: ' + prefixlists[prefixlist_key])
 			# if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_value: ' + prefixlist_value)
 			# if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_cidrs: ' + prefixlist_cidrs)
