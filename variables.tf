@@ -30,6 +30,15 @@ variable "variables" {
   default = { }
 }
 
+variable "vpc_config" {
+  type = map(string)
+  description = "Optional: A map of subnet_ids and security_group_ids"  
+  default = {
+    subnet_ids         = []
+    security_group_ids = []
+  }
+}
+
 /*
   {
     debug = "true"
