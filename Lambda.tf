@@ -34,7 +34,8 @@ resource "aws_iam_role_policy" "awsdynprefix" {
 	        "ec2:CreateManagedPrefixList",
                 "ec2:DeleteManagedPrefixList",
                 "ec2:ModifyManagedPrefixList",
-                "ec2:GetManagedPrefixListEntries"
+                "ec2:GetManagedPrefixListEntries",
+                "ec2:CreateNetworkInterface"
             ],
             "Effect": "Allow",
             "Resource": "*"
