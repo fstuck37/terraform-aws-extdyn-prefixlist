@@ -95,10 +95,9 @@ def lambda_handler(event, context):
 		ec2         = session.client('ec2')
 		prefixlists = getPrefixConfig()
 		for prefixlist_key in prefixlists:
-			prefixlist_value = list(prefixlists[prefixlist_key])
-			prefixlist_cidrs = getURL(prefixlist_value)
+			prefixlist_cidrs = getURL(prefixlists[prefixlist_key])
 			if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_key: ' + prefixlist_key)
-			if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_value: ' + prefixlist_value)
+			if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_value: ' + prefixlists[prefixlist_key])
 			if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_cidrs: ' + prefixlist_cidrs)
 			prefixlist_exists(ec2, prefixlist_key)
 	except:
