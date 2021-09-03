@@ -26,10 +26,10 @@ resource "aws_iam_role_policy" "awsdynprefix" {
     "Version": "2012-10-17",
     "Statement": [
         {
-            " ": [
+            "Action": [
                 "logs:CreateLogGroup",
                 "logs:CreateLogStream",
-                "logs:PutLogEvents", 
+                "logs:PutLogEvents",
                 "ec2:Describe*",
 	        "ec2:CreateManagedPrefixList",
                 "ec2:DeleteManagedPrefixList",
