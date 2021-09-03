@@ -33,10 +33,12 @@ variable "variables" {
 variable "vpc_config" {
   type = map(map(list(string)))
   description = "Optional: A map of subnet_ids and security_group_ids"  
-  default = {{
-    subnet_ids         = []
-    security_group_ids = []
-  }}
+  default = {
+    1 = {
+      subnet_ids         = []
+      security_group_ids = []
+    }
+  }
 }
 
 /*
