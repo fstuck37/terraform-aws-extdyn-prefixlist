@@ -46,7 +46,7 @@ EOF
 
 resource "aws_lambda_function" "awsdynprefix" {
   filename         = "${path.module}/awsdynprefix.zip"
-  source_code_hash = "${filebase64(file("${path.module}/awsdynprefix.zip"))}"
+  source_code_hash = filebase64("${path.module}/awsdynprefix.zip")
   function_name    = var.name
   description      = "Lambda Function to create and update dynamic prefix lists"
   role             = aws_iam_role.awsdynprefix.arn
