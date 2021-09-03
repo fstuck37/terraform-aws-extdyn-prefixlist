@@ -104,4 +104,4 @@ def lambda_handler(event, context):
 			# prefixlist_exists(ec2, prefixlist_key)
 	except Exception as e:
 		logger.info('AWS Dynamic Prefix Lambda - Error ' + traceback.format_exc())
-		logger.info('AWS Dynamic Prefix Lambda - Error ' + e)
+		logger.info(e)
