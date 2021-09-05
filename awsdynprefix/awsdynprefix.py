@@ -28,15 +28,8 @@ def getRegion():
 def getPrefixConfig():
 	try:
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - getPrefixConfig()')
-		d = os.environ.items()
-		try:
-			del d['AWS_REGION']
-		except:
-			pass
-		try:
-			del d['debug']
-		except:
-			pass
+		prefix = os.environ['prefix']
+		d = dict(x.split("=") for x in prefix.split(";"))
 		return d
 	except:
 		return None
