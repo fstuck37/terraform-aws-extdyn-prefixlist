@@ -99,7 +99,7 @@ def lambda_handler(event, context):
 		for prefixlist_key in prefixlists:
 			prefixlist_value = prefixlists[prefixlist_key]
 			prefixlist_cidrs = getURL(prefixlist_value)
-			if getDubig(): logDictionary(prefixlist_cidrs)
+			if getDubug(): logDictionary(prefixlist_cidrs)
 			# if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_key: ' + ''.join(map(str,prefixlist_key)))
 			# if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_key: ' + prefixlists[prefixlist_key])
 			# if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_value: ' + prefixlist_value)
