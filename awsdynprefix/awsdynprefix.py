@@ -7,6 +7,14 @@ import ipaddress
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
+def logDictionary(dict):
+	for key in dict:
+		logger.info('AWS Dynamic Prefix List Lambda - Info - logDictionary - ' + str(key) + ' = ' + str(dict[key]))
+
+def logList(l):
+	for v in l:
+		logger.info('AWS Dynamic Prefix List Lambda - Info - logList - ' + str(l) )
+
 def getDebug():
 	try:
 		d = os.environ['debug']
@@ -22,7 +30,7 @@ def getRegion():
 		r = os.environ['AWS_REGION']
 		return r
 	except:
-		logger.info('AWSviaNATGW Lambda - Error - Could not retreive environment variable AWS_REGION')
+		logger.info('AWS Dynamic Prefix List Lambda - Error - Could not retreive environment variable AWS_REGION')
 		return 'error'
 
 def getPrefixConfig():
@@ -87,12 +95,13 @@ def lambda_handler(event, context):
 		session     = boto3.Session(region_name=region)
 		ec2         = session.client('ec2')
 		prefixlists = getPrefixConfig()
-		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlists: ' +  ''.join(map(str,prefixlists)))
+		if getDubig(): logDictionary(prefixlists)
 		for prefixlist_key in prefixlists:
-			# prefixlist_value = list(prefixlists[prefixlist_key])
-			# prefixlist_cidrs = getURL(prefixlist_value)
-			if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_key: ' + ''.join(map(str,prefixlist_key)))
-			if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_key: ' + prefixlists[prefixlist_key])
+			prefixlist_value = prefixlists[prefixlist_key]
+			prefixlist_cidrs = getURL(prefixlist_value)
+			if getDubig(): logDictionary(prefixlist_cidrs)
+			# if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_key: ' + ''.join(map(str,prefixlist_key)))
+			# if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_key: ' + prefixlists[prefixlist_key])
 			# if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_value: ' + prefixlist_value)
 			# if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_cidrs: ' + prefixlist_cidrs)
 			# prefixlist_exists(ec2, prefixlist_key)
