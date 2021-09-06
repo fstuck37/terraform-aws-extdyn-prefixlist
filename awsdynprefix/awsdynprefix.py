@@ -95,7 +95,7 @@ def lambda_handler(event, context):
 		session     = boto3.Session(region_name=region)
 		ec2         = session.client('ec2')
 		prefixlists = getPrefixConfig()
-		if getDubig(): logDictionary(prefixlists)
+		if getDubug(): logDictionary(prefixlists)
 		for prefixlist_key in prefixlists:
 			prefixlist_value = prefixlists[prefixlist_key]
 			prefixlist_cidrs = getURL(prefixlist_value)
