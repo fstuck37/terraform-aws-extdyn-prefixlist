@@ -8,8 +8,11 @@ logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 def logDictionary(dict):
-	for key in dict:
-		logger.info('AWS Dynamic Prefix List Lambda - Info - logDictionary - ' + str(key) + ' = ' + str(dict[key]))
+	try:
+		for key in dict:
+			logger.info('AWS Dynamic Prefix List Lambda - Info - logDictionary - ' + str(key) + ' = ' + str(dict[key]))
+	except:
+		logger.info('AWS Dynamic Prefix List Lambda - Error - logDictionary - ')
 
 def logList(l):
 	for v in l:
