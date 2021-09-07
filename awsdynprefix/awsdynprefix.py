@@ -67,6 +67,14 @@ def getURL(url):
 		logger.info('AWS Dynamic Prefix Lambda - Error - getURL - Could not read URL = ' + url + ' error = ' + error)
 		return None
 
+def create_prefixlist(client, name, cidrs):
+	try:
+		entries = [{'Cidr': '10.0.0.0/16','Description': 'Test1'},]
+		response = client.create_managed_prefix_list(DryRun=True, PrefixListName=name, Entries=entries, MaxEntries=123,AddressFamily='IPv4' )
+	except Exception as error:
+		logger.info('AWS Dynamic Prefix Lambda - Error - create_prefixlist - ' + error)
+		return None
+
 def prefixlist_exists(client, name):
 	try:
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_exists -  prefixlist (' + name + ')')
@@ -84,7 +92,7 @@ def prefixlist_exists(client, name):
 	except Exception as error:
 		logger.info('AWS Dynamic Prefix Lambda - prefixlist_exists Error - error - ' + error)
 		return False
-
+		
 def compare(xset, yset):
 	yset = set(yset)
 	return [item for item in xset if item not in yset]
@@ -109,6 +117,7 @@ def lambda_handler(event, context):
 				if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefix list exists update')
 			else:
 				if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefix list does not exist create it')
+				create_prefixlist(client, prefixlist_key, prefixlist_cidrs)
 	except Exception as e:
 		logger.info('AWS Dynamic Prefix Lambda - Error ' + traceback.format_exc())
 		logger.info(e)
