@@ -103,7 +103,7 @@ def lambda_handler(event, context):
 			prefixlist_value = prefixlists[prefixlist_key]
 			prefixlist_cidrs = getURL(prefixlist_value)
 			if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_key: ' + str(prefixlist_key))
-			if getDebug(): logDictionary(prefixlist_cidrs)
+			if getDebug(): logList(prefixlist_cidrs)
 			# if prefixlist_exists(ec2, prefixlist_key)
 	except Exception as e:
 		logger.info('AWS Dynamic Prefix Lambda - Error ' + traceback.format_exc())
