@@ -69,18 +69,10 @@ def getURL(url):
 
 def prefixlist_exists(client, name):
 	try:
-		response = client.describe_managed_prefix_lists(
-			DryRun=True|False,
-			Filters=[
-				{
-					'Name': 'string',
-					'Values': [name]
-				}
-			],
-			MaxResults=123
-		)
-		logger.info('AWS Dynamic Prefix Lambda - prefixlist_exists TEST - ' + response['PrefixLists'][0])
-		# need to check if response is valid and return true or false -----------------------------------------------------------
+		filters = [{'Name': 'string', 'Values': name}]
+		prefixlist = client.describe_managed_prefix_lists(Filters=filters)
+		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_exists -  prefixlist ' + str(prefixlist))
+		# need to check if response is valid and return true or false ----------------------------------------------------------- describe_managed_prefix_lists(**kwargs)
 	except Exception as error:
 		logger.info('AWS Dynamic Prefix Lambda - prefixlist_exists Error - error - ' + error)
 
@@ -104,7 +96,7 @@ def lambda_handler(event, context):
 			prefixlist_cidrs = getURL(prefixlist_value)
 			if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_key: ' + str(prefixlist_key))
 			if getDebug(): logList(prefixlist_cidrs)
-			# if prefixlist_exists(ec2, prefixlist_key)
+			ex = prefixlist_exists(ec2, prefixlist_key)
 	except Exception as e:
 		logger.info('AWS Dynamic Prefix Lambda - Error ' + traceback.format_exc())
 		logger.info(e)
