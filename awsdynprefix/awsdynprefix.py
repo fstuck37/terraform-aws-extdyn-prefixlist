@@ -71,9 +71,16 @@ def prefixlist_exists(client, name):
 	try:
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_exists -  prefixlist (' + name + ')')
 		filters = [{'Name': 'prefix-list-name', 'Values': [name]}]
-		prefixlist = client.describe_managed_prefix_lists(Filters=filters)
+		response = client.describe_managed_prefix_lists(Filters=filters)
+		prefixlist = response['PrefixLists']
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_exists -  prefixlist ' + str(prefixlist))
-		# need to check if response is valid and return true or false ----------------------------------------------------------- describe_managed_prefix_lists(**kwargs)
+		if len(prefixlist)==1:
+			return True
+		elif len(prefixlist)>1:
+			logger.info('AWS Dynamic Prefix Lambda - Warning - prefixlist_exists -  prefixlist_exists(' + name + ') retuned ' + len(prefixlist) + ' which is more than 1')
+			return True
+		else:
+			return False
 	except Exception as error:
 		logger.info('AWS Dynamic Prefix Lambda - prefixlist_exists Error - error - ' + error)
 
@@ -97,7 +104,10 @@ def lambda_handler(event, context):
 			prefixlist_cidrs = getURL(prefixlist_value)
 			if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_key: ' + str(prefixlist_key))
 			if getDebug(): logList(prefixlist_cidrs)
-			ex = prefixlist_exists(ec2, prefixlist_key)
+			if prefixlist_exists(ec2, prefixlist_key):
+				if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefix list exists update')
+			else:
+				if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefix list does not exist create it')
 	except Exception as e:
 		logger.info('AWS Dynamic Prefix Lambda - Error ' + traceback.format_exc())
 		logger.info(e)
