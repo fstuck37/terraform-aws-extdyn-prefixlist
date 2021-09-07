@@ -117,7 +117,7 @@ def lambda_handler(event, context):
 				if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefix list exists update')
 			else:
 				if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefix list does not exist create it')
-				create_prefixlist(client, prefixlist_key, prefixlist_cidrs)
+				create_prefixlist(ec2, prefixlist_key, prefixlist_cidrs)
 	except Exception as e:
 		logger.info('AWS Dynamic Prefix Lambda - Error ' + traceback.format_exc())
 		logger.info(e)
