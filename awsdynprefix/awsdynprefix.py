@@ -70,7 +70,7 @@ def getURL(url):
 def create_prefixlist(client, name, cidrs):
 	try:
 		entries = [{'Cidr': '10.0.0.0/16','Description': 'Test1'},]
-		response = client.create_managed_prefix_list(DryRun=True, PrefixListName=name, Entries=entries, MaxEntries=123,AddressFamily='IPv4' )
+		response = client.create_managed_prefix_list(DryRun=False, PrefixListName=name, Entries=entries, MaxEntries=123,AddressFamily='IPv4' )
 	except Exception as error:
 		logger.info('AWS Dynamic Prefix Lambda - Error - create_prefixlist - ' + error)
 		return None
