@@ -83,6 +83,7 @@ def prefixlist_exists(client, name):
 			return False
 	except Exception as error:
 		logger.info('AWS Dynamic Prefix Lambda - prefixlist_exists Error - error - ' + error)
+		return False
 
 def compare(xset, yset):
 	yset = set(yset)
