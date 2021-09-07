@@ -69,7 +69,7 @@ def getURL(url):
 
 def prefixlist_exists(client, name):
 	try:
-		filters = [{'Name': 'string', 'Values': name}]
+		filters = [{'Name': 'string', 'Values': [name]}]
 		prefixlist = client.describe_managed_prefix_lists(Filters=filters)
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_exists -  prefixlist ' + str(prefixlist))
 		# need to check if response is valid and return true or false ----------------------------------------------------------- describe_managed_prefix_lists(**kwargs)
