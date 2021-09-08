@@ -46,9 +46,15 @@ resource "aws_iam_role_policy" "awsdynprefix" {
 EOF
 }
 
+data "archive_file" "awsdynprefix" {
+  type        = "zip"
+  source_file = "${path.module}/awsdynprefix/awsdynprefix.py"
+  output_path = "${path.module}/awsdynprefix.zip"
+}
+
 resource "aws_lambda_function" "awsdynprefix" {
-  filename         = "${path.module}/awsdynprefix.zip"
-  source_code_hash = filebase64sha256("${path.module}/awsdynprefix.zip")
+  filename         = data.archive_file.awsdynprefix.output_path
+  source_code_hash = data.archive_file.awsdynprefix.output_base64sha256
   function_name    = var.name
   description      = "Lambda Function to create and update dynamic prefix lists"
   role             = aws_iam_role.awsdynprefix.arn
