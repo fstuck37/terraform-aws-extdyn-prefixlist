@@ -75,7 +75,7 @@ def create_prefixlist(client, name, cidrs):
 			if first:
 				s = s + "{'Cidr': " + cidr +",'Description': ''}"
 			else:
-				s = s + ",{'Cidr': " + cidr +",'Description': ''}"")
+				s = s + ",{'Cidr': " + cidr +",'Description': ''}"
 		entries = s + "]"
 		response = client.create_managed_prefix_list(DryRun=False, PrefixListName=name, Entries=entries, MaxEntries=len(cidrs),AddressFamily='IPv4' )
 	except Exception as error:
