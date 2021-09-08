@@ -132,7 +132,7 @@ def get_prefixlist_id(client, name):
 			return prefixlist[0]['PrefixListId']
 		elif len(prefixlist)>1:
 			logger.info('AWS Dynamic Prefix Lambda - Warning - prefixlist_exists -  prefixlist_exists(' + name + ') retuned ' + len(prefixlist) + ' which is more than 1')
-			return return prefixlist[0]['PrefixListId']
+			return prefixlist[0]['PrefixListId']
 		else:
 			return None
 	except Exception as error:
