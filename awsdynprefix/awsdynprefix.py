@@ -110,14 +110,14 @@ def update_prefixlist(client, name, cidrs):
 			entry = {'Cidr': cidr,'Description': ''}
 			entries_add.append(entry)
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist - entries_add ' + str(entries_add))
-		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist -  build entries_remove')
 		# Build entries_remove
+		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist -  build entries_remove')
 		entries_remove = []
 		if len(cidr_remove) > 100:
 			logger.info('AWS Dynamic Prefix Lambda - Warning - update_prefixlist - lenth of cidr_remove > 100 - trunkcating Prefix List ' + name)
 			cidrs_remove_limited = list(cidr_remove)[:100]
 		else:
-			cidrs_add_limited = list(cidr_remove)
+			cidrs_remove_limited = list(cidr_remove)
 		for cidr in cidrs_remove_limited:
 			entry = {'Cidr': cidr}
 			entries_remove.append(entry)
