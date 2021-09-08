@@ -72,9 +72,9 @@ def create_prefixlist(client, name, cidrs):
 		entries = []
 		if len(cidrs) > 100:
 			logger.info('AWS Dynamic Prefix Lambda - Warning - create_prefixlist - lenth of cidrs > 100 - trunkcating Prefix List ' + name)
-			cidrs_limited = cidrs[:100]
+			cidrs_limited = list(cidrs)[:100]
 		else:
-			cidrs_limited = cidrs
+			cidrs_limited = list(cidrs)
 		for cidr in cidrs_limited:
 			entry = {'Cidr': cidr,'Description': ''}
 			entries.append(entry)
