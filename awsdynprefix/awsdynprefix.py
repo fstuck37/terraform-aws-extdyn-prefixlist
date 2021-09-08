@@ -85,7 +85,7 @@ def create_prefixlist(client, name, cidrs):
 
 def update_prefixlist(client, name, cidrs):
 	try:
-		prefixlistId = get_prefixlist_id(name)
+		prefixlistId = get_prefixlist_id(client, name)
 		response = client.get_managed_prefix_list_entries(DryRun=False, PrefixListId=prefixlistId )
 		existing = []
 		if len(response) > 0:
