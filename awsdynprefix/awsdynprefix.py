@@ -12,7 +12,7 @@ def logDictionary(dict):
 		for key in dict:
 			logger.info('AWS Dynamic Prefix List Lambda - Info - logDictionary - ' + str(key) + ' = ' + str(dict[key]))
 	except Exception as error:
-		logger.info('AWS Dynamic Prefix List Lambda - Error - logDictionary - ' + error)
+		logger.info('AWS Dynamic Prefix List Lambda - Error - logDictionary - ' + str(error))
 
 def logList(l):
 	for v in l:
@@ -33,7 +33,7 @@ def getRegion():
 		r = os.environ['AWS_REGION']
 		return r
 	except Exception as error:
-		logger.info('AWS Dynamic Prefix List Lambda - Error - getRegion - Could not retreive environment variable AWS_REGION - ' + error )
+		logger.info('AWS Dynamic Prefix List Lambda - Error - getRegion - Could not retreive environment variable AWS_REGION - ' + str(error))
 		return 'error'
 
 def getPrefixConfig():
@@ -43,7 +43,7 @@ def getPrefixConfig():
 		d = dict(x.split("=") for x in prefix.split(";"))
 		return d
 	except Exception as error:
-		logger.info('AWS Dynamic Prefix Lambda - Error - getPrefixConfig - ' + error)
+		logger.info('AWS Dynamic Prefix Lambda - Error - getPrefixConfig - ' + str(error))
 		return None
 
 def getURL(url):
@@ -64,7 +64,7 @@ def getURL(url):
 				ips.remove(ip)
 		return set(ips)
 	except Exception as error:
-		logger.info('AWS Dynamic Prefix Lambda - Error - getURL - Could not read URL = ' + url + ' error = ' + error)
+		logger.info('AWS Dynamic Prefix Lambda - Error - getURL - Could not read URL = ' + url + ' error = ' + str(error))
 		return None
 
 def create_prefixlist(client, name, cidrs):
@@ -137,7 +137,7 @@ def get_prefixlist_id(client, name):
 		else:
 			return None
 	except Exception as error:
-		logger.info('AWS Dynamic Prefix Lambda - get_prefixlist_id - Error - ' + error)
+		logger.info('AWS Dynamic Prefix Lambda - get_prefixlist_id - Error - ' + str(error))
 		return None
 
 def prefixlist_exists(client, name):
@@ -155,7 +155,7 @@ def prefixlist_exists(client, name):
 		else:
 			return False
 	except Exception as error:
-		logger.info('AWS Dynamic Prefix Lambda - prefixlist_exists Error - error - ' + error)
+		logger.info('AWS Dynamic Prefix Lambda - prefixlist_exists Error - error - ' + str(error))
 		return False
 		
 def compare(xset, yset):
@@ -194,6 +194,6 @@ def lambda_handler(event, context):
 			else:
 				if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefix list does not exist create it')
 				create_prefixlist(ec2, prefixlist_key, prefixlist_cidrs)
-	except Exception as e:
+	except Exception as error:
 		logger.info('AWS Dynamic Prefix Lambda - Error ' + traceback.format_exc())
-		logger.info(e)
+		logger.info('AWS Dynamic Prefix Lambda - lambda_handler - Error - ' + str(error))
