@@ -89,7 +89,7 @@ def update_prefixlist(client, name, cidrs):
 		response = client.get_managed_prefix_list_entries(DryRun=False, PrefixListId=prefixlistId )
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist - response ' + str(response))
 		existing = []
-		if len(response) > 0:
+		if len(response['Entries']) > 0:
 			for c in response['Entries']:
 				existing.append(c)
 		else:
