@@ -169,8 +169,8 @@ def lambda_handler(event, context):
 		test_cidrs2 = ['10.0.0.0/16', '192.168.0.0/16', '172.16.0.0/12']
 		test_add = compare(test_cidrs1, test_cidrs2)
 		test_remove = compare(test_cidrs2, test_cidrs1)
-		logger.info('AWS Dynamic Prefix Lambda - Debug - test_add: ' + test_add)
-		logger.info('AWS Dynamic Prefix Lambda - Debug - test_remove: ' + test_remove)
+		logger.info('AWS Dynamic Prefix Lambda - Debug - test_add: ' + str(test_add))
+		logger.info('AWS Dynamic Prefix Lambda - Debug - test_remove: ' + str(test_remove))
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - Get information')
 		region      = getRegion()
 		session     = boto3.Session(region_name=region)
