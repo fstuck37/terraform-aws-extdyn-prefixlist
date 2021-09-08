@@ -151,8 +151,9 @@ def get_prefixlist_ver(client, name):
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - get_prefixlist_ver -  prefixlist = ' + name )
 		filters = [{'Name': 'prefix-list-name', 'Values': [name]}]
 		response = client.describe_managed_prefix_lists(Filters=filters)
+		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - get_prefixlist_ver - ' + str(response))
 		version = response['Version']
-		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - get_prefixlist_ver -  prefixlist ' + version)
+		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - get_prefixlist_ver - version = ' + version)
 		return version
 	except Exception as error:
 		logger.info('AWS Dynamic Prefix Lambda - get_prefixlist_ver - Error - ' + str(error))
