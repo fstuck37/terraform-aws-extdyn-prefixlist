@@ -93,29 +93,30 @@ def update_prefixlist(client, name, cidrs):
 				existing.append(c)
 			else:
 				logger.info('AWS Dynamic Prefix Lambda - Error - update_prefixlist - response = 0 - ' + name)
-		# note sure if I need to reverse these
 		cidr_add = compare(set(cidr), set(exiting))
 		cidr_remove = compare(set(exiting), set(cidr))
 		# Build entries_add
 		entries_add = []
 		if len(cidr_add) > 100:
-			logger.info('AWS Dynamic Prefix Lambda - Warning - create_prefixlist - lenth of cidr_add > 100 - trunkcating Prefix List ' + name)
+			logger.info('AWS Dynamic Prefix Lambda - Warning - update_prefixlist - lenth of cidr_add > 100 - trunkcating Prefix List ' + name)
 			cidrs_add_limited = list(cidr_add)[:100]
 		else:
 			cidrs_add_limited = list(cidr_add)
 		for cidr in cidrs_add_limited:
 			entry = {'Cidr': cidr,'Description': ''}
 			entries_add.append(entry)
+		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist - entries_add ' + str(entries_add))
 		# Build entries_remove
 		entries_remove = []
 		if len(cidr_remove) > 100:
-			logger.info('AWS Dynamic Prefix Lambda - Warning - create_prefixlist - lenth of cidr_remove > 100 - trunkcating Prefix List ' + name)
+			logger.info('AWS Dynamic Prefix Lambda - Warning - update_prefixlist - lenth of cidr_remove > 100 - trunkcating Prefix List ' + name)
 			cidrs_remove_limited = list(cidr_remove)[:100]
 		else:
 			cidrs_add_limited = list(cidr_remove)
 		for cidr in cidrs_remove_limited:
 			entry = {'Cidr': cidr}
-			entries_remove.append(entry)	
+			entries_remove.append(entry)
+		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist - entries_remove ' + str(entries_remove))
 		mod_response = client.modify_managed_prefix_list(DryRun=False, PrefixListId=prefixlistId, AddEntries=entries_add, RemoveEntries=entries_remove )
 	except Exception as error:
 		logger.info('AWS Dynamic Prefix Lambda - Error - update_prefixlist - ' + error)
