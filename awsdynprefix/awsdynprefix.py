@@ -70,7 +70,12 @@ def getURL(url):
 def create_prefixlist(client, name, cidrs):
 	try:
 		entries = []
-		for cidr in cidrs:
+		if len(cidrs) > 100:
+			logger.info('AWS Dynamic Prefix Lambda - Warning - create_prefixlist - lenth of cidrs > 100 - trunkcating Prefix List ' + name)
+			cidrs_limited = cidrs[:100]
+		else:
+			cidrs_limited = cidrs
+		for cidr in cidrs_limited:
 			entry = {'Cidr': cidr,'Description': ''}
 			entries.append(entry)
 		response = client.create_managed_prefix_list(DryRun=False, PrefixListName=name, Entries=entries, MaxEntries=len(cidrs),AddressFamily='IPv4' )
