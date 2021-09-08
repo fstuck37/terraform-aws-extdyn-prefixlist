@@ -92,7 +92,7 @@ def update_prefixlist(client, name, cidrs):
 		response = paginator.paginate(DryRun=False, PrefixListId=prefixlistId)
 		#response = client.get_managed_prefix_list_entries(DryRun=False, PrefixListId=prefixlistId )
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist - response ' + str(response))
-		if getDebug(): logDictionary(response)
+		if getDebug(): logList(response)
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist -  build existing')
 		existing = []
 		if len(response['Entries']) > 0:
