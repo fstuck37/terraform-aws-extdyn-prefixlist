@@ -80,13 +80,15 @@ def create_prefixlist(client, name, cidrs):
 			entries.append(entry)
 		response = client.create_managed_prefix_list(DryRun=False, PrefixListName=name, Entries=entries, MaxEntries=1000,AddressFamily='IPv4' )
 	except Exception as error:
-		logger.info('AWS Dynamic Prefix Lambda - Error - create_prefixlist - ' + error)
+		logger.info('AWS Dynamic Prefix Lambda - Error - create_prefixlist - ' + str(error))
 		return None
 
 def update_prefixlist(client, name, cidrs):
 	try:
 		prefixlistId = get_prefixlist_id(client, name)
 		response = client.get_managed_prefix_list_entries(DryRun=False, PrefixListId=prefixlistId )
+		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist - response ' + str(response))
+
 		existing = []
 		if len(response) > 0:
 			for c in response[0]['Entries']:
@@ -119,7 +121,7 @@ def update_prefixlist(client, name, cidrs):
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist - entries_remove ' + str(entries_remove))
 		mod_response = client.modify_managed_prefix_list(DryRun=False, PrefixListId=prefixlistId, AddEntries=entries_add, RemoveEntries=entries_remove )
 	except Exception as error:
-		logger.info('AWS Dynamic Prefix Lambda - Error - update_prefixlist - ' + error)
+		logger.info('AWS Dynamic Prefix Lambda - Error - update_prefixlist - ' + str(error))
 		return None
 
 def get_prefixlist_id(client, name):
