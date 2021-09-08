@@ -90,13 +90,16 @@ def update_prefixlist(client, name, cidrs):
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist - prefixlistId = ' + str(prefixlistId) + ' & prefixlistVer = ' + str(prefixlistVer))
 		paginator = client.get_paginator('get_managed_prefix_list_entries')
 		response = paginator.paginate(DryRun=False, PrefixListId=prefixlistId)
+		entries = []
+		for l in response:
+			entries.extend(l[Entries])
 		#response = client.get_managed_prefix_list_entries(DryRun=False, PrefixListId=prefixlistId )
-		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist - response ' + str(response))
-		if getDebug(): logList(response)
+		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist - response entries')
+		if getDebug(): logList(entries)
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist -  build existing')
 		existing = []
-		if len(response['Entries']) > 0:
-			for c in response['Entries']:
+		if len(entries > 0:
+			for c in entries:
 				existing.append(c['Cidr'])
 		else:
 			logger.info('AWS Dynamic Prefix Lambda - Error - update_prefixlist - response[Entries] = 0 - ' + name)
