@@ -91,7 +91,7 @@ def update_prefixlist(client, name, cidrs):
 
 		existing = []
 		if len(response) > 0:
-			for c in response[0]['Entries']:
+			for c in response['Entries']:
 				existing.append(c)
 			else:
 				logger.info('AWS Dynamic Prefix Lambda - Error - update_prefixlist - response = 0 - ' + name)
