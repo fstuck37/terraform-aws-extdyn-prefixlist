@@ -98,7 +98,7 @@ def update_prefixlist(client, name, cidrs):
 		if getDebug(): logList(entries)
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist -  build existing')
 		existing = []
-		if len(entries > 0:
+		if len(entries) > 0:
 			for c in entries:
 				existing.append(c['Cidr'])
 		else:
