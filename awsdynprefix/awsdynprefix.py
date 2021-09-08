@@ -89,7 +89,7 @@ def update_prefixlist(client, name, cidrs):
 		response = client.get_managed_prefix_list_entries(DryRun=False, PrefixListId=prefixlistId )
 		existing = []
 		if len(response) > 0:
-			for c in response[0]['Entries']
+			for c in response[0]['Entries']:
 				existing.append(c)
 			else:
 				logger.info('AWS Dynamic Prefix Lambda - Error - update_prefixlist - response = 0 - ' + name)
@@ -165,6 +165,12 @@ def lambda_handler(event, context):
 	if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - Started with Debugging enabled')
 	if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - Triggering Event: ' + str(event))
 	try:
+		test_cidrs1 = ['10.0.0.0/16', '192.168.0.0/16', '172.16.0.0/12', '192.168.0.0/24']
+		test_cidrs2 = ['10.0.0.0/16', '192.168.0.0/16', '172.16.0.0/12']
+		test_add = compare(test_cidrs1, testcidrs2)
+		test_remove = compare(test_cidrs2, testcidrs1)
+		logger.info('AWS Dynamic Prefix Lambda - Debug - test_add: ' + test_add)
+		logger.info('AWS Dynamic Prefix Lambda - Debug - test_remove: ' + test_remove)
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - Get information')
 		region      = getRegion()
 		session     = boto3.Session(region_name=region)
@@ -179,6 +185,11 @@ def lambda_handler(event, context):
 			if getDebug(): logList(prefixlist_cidrs)
 			if prefixlist_exists(ec2, prefixlist_key):
 				if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefix list exists update')
+				update_prefixlist(ec2, prefixlist_key, prefixlist_cidrs)
+				if getDebug(): logger.info('AWS Dynamic Prefix Lambda - TEST - update with test_cidrs2')
+				update_prefixlist(ec2, prefixlist_key, test_cidrs2)
+				if getDebug(): logger.info('AWS Dynamic Prefix Lambda - TEST - update with test_cidrs1')
+				update_prefixlist(ec2, prefixlist_key, test_cidrs1)
 			else:
 				if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefix list does not exist create it')
 				create_prefixlist(ec2, prefixlist_key, prefixlist_cidrs)
