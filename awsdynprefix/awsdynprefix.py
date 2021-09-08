@@ -86,6 +86,7 @@ def create_prefixlist(client, name, cidrs):
 def update_prefixlist(client, name, cidrs):
 	try:
 		prefixlistId = get_prefixlist_id(client, name)
+		prefixlistVer = get_prefixlist_ver(client, name)
 		response = client.get_managed_prefix_list_entries(DryRun=False, PrefixListId=prefixlistId )
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist - response ' + str(response))
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist -  build existing')
@@ -122,7 +123,7 @@ def update_prefixlist(client, name, cidrs):
 			entry = {'Cidr': cidr}
 			entries_remove.append(entry)
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist - entries_remove ' + str(entries_remove))
-		mod_response = client.modify_managed_prefix_list(DryRun=False, PrefixListId=prefixlistId, AddEntries=entries_add, RemoveEntries=entries_remove )
+		mod_response = client.modify_managed_prefix_list(DryRun=False, PrefixListId=prefixlistId, AddEntries=entries_add, RemoveEntries=entries_remove, Version=prefixlistVer)
 	except Exception as error:
 		logger.info('AWS Dynamic Prefix Lambda - Error - update_prefixlist - ' + str(error))
 		return None
@@ -143,6 +144,18 @@ def get_prefixlist_id(client, name):
 			return None
 	except Exception as error:
 		logger.info('AWS Dynamic Prefix Lambda - get_prefixlist_id - Error - ' + str(error))
+		return None
+
+def get_prefixlist_ver(client, name):
+	try:
+		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - get_prefixlist_ver -  prefixlist = ' + name )
+		filters = [{'Name': 'prefix-list-name', 'Values': [name]}]
+		response = client.describe_managed_prefix_lists(Filters=filters)
+		version = response['Version']
+		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - get_prefixlist_ver -  prefixlist ' + version)
+		return version
+	except Exception as error:
+		logger.info('AWS Dynamic Prefix Lambda - get_prefixlist_ver - Error - ' + str(error))
 		return None
 
 def prefixlist_exists(client, name):
