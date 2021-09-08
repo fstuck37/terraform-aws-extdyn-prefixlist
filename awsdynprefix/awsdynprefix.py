@@ -124,7 +124,10 @@ def update_prefixlist(client, name, cidrs):
 			entry = {'Cidr': cidr}
 			entries_remove.append(entry)
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist - entries_remove ' + str(entries_remove))
-		mod_response = client.modify_managed_prefix_list(DryRun=False, PrefixListId=prefixlistId, AddEntries=entries_add, RemoveEntries=entries_remove, CurrentVersion=prefixlistVer)
+		if len(entries_add) > 0 or len(entries_remove) >0
+			mod_response = client.modify_managed_prefix_list(DryRun=False, PrefixListId=prefixlistId, AddEntries=entries_add, RemoveEntries=entries_remove, CurrentVersion=prefixlistVer)
+		else
+			if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist - no changes required')
 	except Exception as error:
 		logger.info('AWS Dynamic Prefix Lambda - Error - update_prefixlist - ' + str(error))
 		return None
@@ -209,12 +212,12 @@ def lambda_handler(event, context):
 			if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_key: ' + str(prefixlist_key))
 			if getDebug(): logList(prefixlist_cidrs)
 			if prefixlist_exists(ec2, prefixlist_key):
-				# if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefix list exists update')
-				# update_prefixlist(ec2, prefixlist_key, prefixlist_cidrs)
-				if getDebug(): logger.info('AWS Dynamic Prefix Lambda - TEST - update with test_cidrs2')
-				update_prefixlist(ec2, prefixlist_key, test_cidrs2)
-				if getDebug(): logger.info('AWS Dynamic Prefix Lambda - TEST - update with test_cidrs1')
-				update_prefixlist(ec2, prefixlist_key, test_cidrs1)
+				if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefix list exists update')
+				update_prefixlist(ec2, prefixlist_key, prefixlist_cidrs)
+				#if getDebug(): logger.info('AWS Dynamic Prefix Lambda - TEST - update with test_cidrs2')
+				#update_prefixlist(ec2, prefixlist_key, test_cidrs2)
+				#if getDebug(): logger.info('AWS Dynamic Prefix Lambda - TEST - update with test_cidrs1')
+				#update_prefixlist(ec2, prefixlist_key, test_cidrs1)
 			else:
 				if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefix list does not exist create it')
 				create_prefixlist(ec2, prefixlist_key, prefixlist_cidrs)
