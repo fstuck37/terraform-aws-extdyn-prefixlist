@@ -124,9 +124,9 @@ def update_prefixlist(client, name, cidrs):
 			entry = {'Cidr': cidr}
 			entries_remove.append(entry)
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist - entries_remove ' + str(entries_remove))
-		if len(entries_add) > 0 or len(entries_remove) >0
+		if len(entries_add)>0 or len(entries_remove)>0:
 			mod_response = client.modify_managed_prefix_list(DryRun=False, PrefixListId=prefixlistId, AddEntries=entries_add, RemoveEntries=entries_remove, CurrentVersion=prefixlistVer)
-		else
+		else:
 			if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist - no changes required')
 	except Exception as error:
 		logger.info('AWS Dynamic Prefix Lambda - Error - update_prefixlist - ' + str(error))
