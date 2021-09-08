@@ -95,6 +95,7 @@ def update_prefixlist(client, name, cidrs):
 				existing.append(c['Cidr'])
 		else:
 			logger.info('AWS Dynamic Prefix Lambda - Error - update_prefixlist - response[Entries] = 0 - ' + name)
+		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist -  existing ' + str(existing))
 		cidr_add = compare(set(cidrs), set(existing))
 		cidr_remove = compare(set(existing), set(cidrs))
 		# Build entries_add
