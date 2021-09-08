@@ -88,15 +88,17 @@ def update_prefixlist(client, name, cidrs):
 		prefixlistId = get_prefixlist_id(client, name)
 		response = client.get_managed_prefix_list_entries(DryRun=False, PrefixListId=prefixlistId )
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist - response ' + str(response))
+		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist -  build existing')
 		existing = []
 		if len(response['Entries']) > 0:
 			for c in response['Entries']:
 				existing.append(c)
 		else:
-			logger.info('AWS Dynamic Prefix Lambda - Error - update_prefixlist - response = 0 - ' + name)
+			logger.info('AWS Dynamic Prefix Lambda - Error - update_prefixlist - response[Entries] = 0 - ' + name)
 		cidr_add = compare(set(cidrs), set(existing))
 		cidr_remove = compare(set(existing), set(cidrs))
 		# Build entries_add
+		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist -  build entries_add')
 		entries_add = []
 		if len(cidr_add) > 100:
 			logger.info('AWS Dynamic Prefix Lambda - Warning - update_prefixlist - lenth of cidr_add > 100 - trunkcating Prefix List ' + name)
@@ -107,6 +109,7 @@ def update_prefixlist(client, name, cidrs):
 			entry = {'Cidr': cidr,'Description': ''}
 			entries_add.append(entry)
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist - entries_add ' + str(entries_add))
+		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - update_prefixlist -  build entries_remove')
 		# Build entries_remove
 		entries_remove = []
 		if len(cidr_remove) > 100:
