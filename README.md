@@ -46,10 +46,10 @@ Argument Reference
    * **tags** Optional : A map of tags to assign to the resource.
    * **variables** Required: A map of environment variables.
    * **vpc_config** Optional: A map of subnet_ids and security_group_ids
-```
-{
-debug = "true"
-test1 = "http://test.example.com/feeds/s3"
-test2 = "http://test.example.com/feeds/s3"
-}
-```
+	```
+	{
+	debug = "true"
+	test1 = "http://test.example.com/feeds/s3"
+	test2 = "http://test.example.com/feeds/s3"
+	}
+	```
