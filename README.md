@@ -36,6 +36,7 @@ Information
 ------------
 1. The number of entries allowed in the prefix list is limited by its usage. For example, if the prefix list is used in a security group this should be limited to the number of security group entries.
 2. This code does not limit the size this should be controlled by the source URL.
+3. This was tested with a feed from Palo Alto's Minemeld (https://github.com/PaloAltoNetworks/minemeld/wiki)
 
 Argument Reference
 ------------
