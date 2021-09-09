@@ -46,10 +46,11 @@ Argument Reference
    * **tags** Optional : A map of tags to assign to the resource.
    * **variables** Required: A map of environment variables.
    * **vpc_config** Optional: A map of subnet_ids and security_group_ids
+     * **debug** Optional: Boolean (True or False) to enable debug logging.
+     * **prefix** Required: Semicolon(;) delimited list dictionary of prefix lists and URLs. "<name1>=<url1>;<name2>=<url2>;...;<nameN>=<urlN>"
    ```
    {
-     debug = "true"
-     test1 = "http://test.example.com/feeds/s3"
-     test2 = "http://test.example.com/feeds/s3"
+     debug = "True"
+     prefix = "http://test.example.com/feeds/s3"
    }
    ```

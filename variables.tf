@@ -40,11 +40,3 @@ variable "vpc_config" {
     }
   ]
 }
-
-/*
-  {
-    debug = "true"
-    test1 = "http://test.example.com/feeds/s3"
-    test2 = "http://test.example.com/feeds/s3"
-  }
-*/
