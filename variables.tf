@@ -32,7 +32,7 @@ variable "variables" {
 
 variable "vpc_config" {
   type = list(map(list(string)))
-  description = "Optional: A map of subnet_ids and security_group_ids"  
+  description = "Optional: A list of maps of subnet_ids and security_group_ids lists"
   default = [
     {
       subnet_ids         = []
@@ -44,7 +44,7 @@ variable "vpc_config" {
 /*
   {
     debug = "true"
-    test1 = "http://minemeld.dnb.com/feeds/s3"
-    test2 = "http://minemeld.dnb.com/feeds/s3"
+    test1 = "http://test.example.com/feeds/s3"
+    test2 = "http://test.example.com/feeds/s3"
   }
 */
