@@ -79,6 +79,8 @@ def create_prefixlist(client, name, cidrs):
 			entry = {'Cidr': cidr,'Description': ''}
 			entries.append(entry)
 		response = client.create_managed_prefix_list(DryRun=False, PrefixListName=name, Entries=entries, MaxEntries=1000,AddressFamily='IPv4' )
+		if len(cidrs) > 100:
+			update_prefixlist(client, name, cidrs)
 	except Exception as error:
 		logger.info('AWS Dynamic Prefix Lambda - Error - create_prefixlist - ' + str(error))
 		return None
