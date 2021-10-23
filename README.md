@@ -21,7 +21,7 @@ module "awsdynprefix" {
   schedule_expression = "rate(15 minutes)"
   
   variables =   {
-    prefix = "test1=http://10.242.157.97/feeds/s3;test2=http://10.242.157.97/feeds/s3"
+    prefix = "test1=http://10.0.0.10/feeds/s3;test2=http://10.0.0.20/feeds/s3"
   }
 
   vpc_config = [
