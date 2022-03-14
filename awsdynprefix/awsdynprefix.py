@@ -34,7 +34,7 @@ def getMaxEntries():
 		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - MaxEntries - ' + m + ' - found')
 		return int(m)
 	except:
-		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - MaxEntries - 60 - not found using defaulty')
+		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - MaxEntries - 60 - not found using default')
 		return 60
 
 def getRegion():
