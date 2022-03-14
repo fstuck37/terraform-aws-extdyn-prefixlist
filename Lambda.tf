@@ -92,7 +92,7 @@ resource "aws_cloudwatch_event_rule" "awsdynprefix" {
   description = "This is a rule for triggering our lambdas every five minutes."
   schedule_expression = var.schedule_expression
 }
-  
+
 resource "aws_cloudwatch_event_target" "awsdynprefix" {
   rule      = aws_cloudwatch_event_rule.awsdynprefix.name
   arn       = aws_lambda_function.awsdynprefix.arn

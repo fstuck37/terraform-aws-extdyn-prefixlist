@@ -28,6 +28,15 @@ def getDebug():
 	except:
 		return False
 
+def getMaxEntries():
+	try:
+		m = os.environ['MaxEntries']
+		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - MaxEntries - ' + m + ' - found')
+		return int(m)
+	except:
+		if getDebug(): logger.info('AWS Dynamic Prefix Lambda - MaxEntries - 60 - not found using defaulty')
+		return 60
+
 def getRegion():
 	try:
 		r = os.environ['AWS_REGION']
@@ -67,7 +76,7 @@ def getURL(url):
 		logger.info('AWS Dynamic Prefix Lambda - Error - getURL - Could not read URL = ' + url + ' error = ' + str(error))
 		return None
 
-def create_prefixlist(client, name, cidrs):
+def create_prefixlist(client, name, cidrs, maxentries):
 	try:
 		entries = []
 		if len(cidrs) > 100:
@@ -78,7 +87,7 @@ def create_prefixlist(client, name, cidrs):
 		for cidr in cidrs_limited:
 			entry = {'Cidr': cidr,'Description': ''}
 			entries.append(entry)
-		response = client.create_managed_prefix_list(DryRun=False, PrefixListName=name, Entries=entries, MaxEntries=1000,AddressFamily='IPv4' )
+		response = client.create_managed_prefix_list(DryRun=False, PrefixListName=name, Entries=entries, MaxEntries=maxentries, AddressFamily='IPv4' )
 		if len(cidrs) > 100:
 			update_prefixlist(client, name, cidrs)
 	except Exception as error:
@@ -210,6 +219,7 @@ def lambda_handler(event, context):
 		for prefixlist_key in prefixlists:
 			prefixlist_value = prefixlists[prefixlist_key]
 			prefixlist_cidrs = getURL(prefixlist_value)
+			maxentries = getMaxEntries()
 			if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefixlist_key: ' + str(prefixlist_key))
 			if getDebug(): logList(prefixlist_cidrs)
 			if prefixlist_exists(ec2, prefixlist_key):
@@ -217,7 +227,7 @@ def lambda_handler(event, context):
 				update_prefixlist(ec2, prefixlist_key, prefixlist_cidrs)
 			else:
 				if getDebug(): logger.info('AWS Dynamic Prefix Lambda - Debug - prefix list does not exist create it')
-				create_prefixlist(ec2, prefixlist_key, prefixlist_cidrs)
+				create_prefixlist(ec2, prefixlist_key, prefixlist_cidrs, maxentries)
 	except Exception as error:
 		logger.info('AWS Dynamic Prefix Lambda - Error ' + traceback.format_exc())
 		logger.info('AWS Dynamic Prefix Lambda - lambda_handler - Error - ' + str(error))

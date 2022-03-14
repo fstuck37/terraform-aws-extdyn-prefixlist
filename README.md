@@ -8,25 +8,18 @@ The URL requested needs to return a simple line delimited list of CIDR blocks.
 Example
 ------------
 ```
-
-module "awsdynprefix" {
-  source       = "git::https://github.com/fstuck37/terraform-aws-extdyn-prefixlist.git"
-
-  tags = { 
-    ProjectName    = "Infrastructure"
-    Environment    = "Development"
-    Classification = "Infrastructure"
-  }
-
+module "awsdynprefix_useast1" {
+  source  = "app.terraform.io/dnb-core/extdyn-prefixlist/aws"
+  version = "0.0.1"
+  name = "awsdynprefix_useast1"
+  tags = var.tags
   schedule_expression = "rate(15 minutes)"
-  
   variables =   {
-    prefix = "test1=http://10.0.0.10/feeds/s3;test2=http://10.0.0.20/feeds/s3"
+    prefix = "siteshield=${module.SiteShield.lb_dns_name}"
   }
-
   vpc_config = [
     {
-      subnet_ids         = ["subnet-1a2b3c4d5e6f7a8b9, "subnet-123456789abcdefab", "subnet-12a34b56c78d90efa" ]
+      subnet_ids         = ["subnet-1234567890abcdef12","subnet-123456789012abcdef","subnet-abcdef123456789012"]
       security_group_ids = [sg-123456789abcdefab]
     }
   ]
@@ -47,12 +40,14 @@ Argument Reference
    * **schedule_expression** Optional : The scheduling expression. For example, cron(0 20 * * ? *). The default is rate(5 minutes).
    * **tags** Optional : A map of tags to assign to the resource.
    * **variables** Required: A map of environment variables.
-   * **vpc_config** Optional: A map of subnet_ids and security_group_ids
      * **debug** Optional: Boolean (True or False) to enable debug logging.
      * **prefix** Required: Semicolon(;) delimited list dictionary of prefix lists and URLs. "<name1>=<url1>;<name2>=<url2>;...;<nameN>=<urlN>"
+     * **MaxEntries** Optional: Maximum number of prefix list entries. This defaults to 60 which matches the default limit on security group entries."
    ```
    {
      debug = "True"
      prefix = "http://test.example.com/feeds/s3"
+     MaxEntries = "60"
    }
    ```
+   * **vpc_config** Optional: A map of subnet_ids and security_group_ids
